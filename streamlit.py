@@ -40,3 +40,16 @@ try:
     st.dataframe(df)
 except FileNotFoundError:
     st.error(f"File '{file_name}' tidak ditemukan!")
+
+# --- FILTER / SEARCH ---
+search_term = st.text_input("Cari data aman (ketik kata kunci):")
+
+if search_term:
+    # Filter semua kolom
+    filtered_df = df[df.apply(lambda row: row.astype(str).str.contains(search_term, case=False).any(), axis=1)]
+    
+    st.subheader(f"Hasil pencarian: '{search_term}'")
+    if filtered_df.empty:
+        st.warning("Tidak ada data yang cocok dengan kata kunci.")
+    else:
+        st.dataframe(filtered_df)

@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # =====================================================
-# KONFIGURASI HALAMAN (WAJIB PALING ATAS)
+# KONFIGURASI HALAMAN
 # =====================================================
 st.set_page_config(page_title="SIPLah Automation System", layout="wide")
 
@@ -36,38 +36,81 @@ def main():
 # =====================================================
 def page_login():
 
-    col1, col2, col3 = st.columns([1,2,1])
-
-    with col2:
-        st.image("assets/logo ladang.png", width=180)
-
-    st.title("MAGANG SANTAI PT LADANG")
-
-    st.header("SIPLah Data Flow Automation: Sistem Cerdas Pengelompokan Produk E-Commerce untuk Mengurangi Bias Kategori dan Meningkatkan Akurasi Analisis")
-
-    st.divider()
-
-    st.subheader("Halaman Login")
-
-    # =============================
-    # BAGIAN INI UNTUK KEVIN EDIT
-    # =============================
-
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-
-    if st.button("Login"):
-        st.success("Login berhasil (contoh tampilan sementara)")
-
-    # --------------------------------------------------
-    # SILAKAN TAMBAHKAN LOGIKA LOGIN DI BAWAH INI
-    # - Validasi akun
-    # - Session state
-    # - Redirect halaman
-    # --------------------------------------------------
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
 
 
+    st.markdown("""
+        <style>
+        div.stButton > button:first-child {
+            background-color: #1E88E5;
+            color: white;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
+
+    logo_col = st.columns([1, 1, 1])
+
+    with logo_col[1]:
+        st.image("assets/logo ladang.png", use_container_width=True)
+
+
+    if st.session_state.logged_in:
+
+        st.success("LOGIN BERHASIL!")
+
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.experimental_rerun()
+
+        st.markdown(
+            "<p style='text-align: center;'>Silakan pilih halaman melalui menu navigasi di sidebar.</p>",
+            unsafe_allow_html=True
+        )
+
+        return
+
+    ADMIN_USERNAME = "admin"
+    ADMIN_PASSWORD = "ladang123"
+
+
+    col_left, col_form, col_right = st.columns([1, 1.2, 1])
+
+    with col_form:
+
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+
+        login_btn = st.button("Login", use_container_width=True)
+
+        if login_btn:
+
+            if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+                st.session_state.logged_in = True
+                st.success("Login berhasil! Selamat datang di sistem.")
+                st.experimental_rerun()
+
+            else:
+                st.error("Username atau Password salah!")
+
+
+        st.markdown("""
+            <div style="
+                background-color: #FFF3CD;
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid #FFEEBA;
+                text-align: center;
+                margin-top: 10px;
+                ">
+                ⚠️ <b>Hanya admin yang bisa mengakses sistem ini</b>
+            </div>
+        """, unsafe_allow_html=True)
+
+
+
+# ===================================SAMPE SINI=====================================================
 
 # =====================================================
 # PAGE 2 – DASHBOARD (BAGIAN DEVINA)

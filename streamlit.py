@@ -24,3 +24,14 @@ st.divider()
 
 # Tambahkan teks tambahan
 st.write("Day-1 nyoba magang")
+import pandas as pd
+
+st.title("CSV VIEW_SHE")
+file_name = "data_klasifikasi.csv" 
+
+try:
+    df = pd.read_csv(file_name)
+    st.subheader("Data CSV:")
+    st.dataframe(df)
+except FileNotFoundError:
+    st.error(f"File '{file_name}' tidak ditemukan!")

@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("MAGANG SANTAI DI PT LADANG")
+st.title("MAGANG SANTAI PT LADANG")
 
 # Tampilkan nama dengan format yang menarik
 st.header("SIPLah Data Flow Automation: Sistem Cerdas Pengelompokan Produk E-Commerce untuk Mengurangi Bias Kategori dan Meningkatkan Akurasi Analisis")

@@ -1,5 +1,10 @@
 import streamlit as st
 
+col1, col2, col3 = st.columns([1,2,1])
+
+with col2:
+    st.image("assets/logo ladang.png", width=180)
+
 st.title("MAGANG SANTAI PT LADANG")
 
 # Tampilkan nama dengan format yang menarik

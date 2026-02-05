@@ -42,7 +42,7 @@ except FileNotFoundError:
     st.error(f"File '{file_name}' tidak ditemukan!")
 
 # --- FILTER / SEARCH ---
-search_term = st.text_input("Cari data aman (ketik kata kunci):")
+search_term = st.text_input("Cari data amana (ketik kata kunci):")
 
 if search_term:
     # Filter semua kolom
@@ -53,49 +53,3 @@ if search_term:
         st.warning("Tidak ada data yang cocok dengan kata kunci.")
     else:
         st.dataframe(filtered_df)
-
-# ===============================
-# QUERY SUGGESTION / AUTOCOMPLETE
-# ===============================
-
-st.divider()
-st.subheader("Query Suggestion (Auto-Completion)")
-
-# Ambil semua nilai unik dari dataframe
-try:
-    all_values = pd.unique(df.astype(str).values.ravel())
-    all_values = sorted([v for v in all_values if v != "nan"])
-except:
-    st.stop()
-
-# Input query tambahan untuk suggestion
-suggest_query = st.text_input("Ketik untuk mendapatkan suggestion:")
-
-# Filter suggestion
-if suggest_query:
-    matched = [
-        v for v in all_values
-        if suggest_query.lower() in v.lower()
-    ]
-else:
-    matched = all_values[:20]  # default tampil sebagian saja
-
-# Tampilkan suggestion (batasi agar tidak berat)
-selected_value = st.selectbox(
-    "Pilih dari suggestion:",
-    options=matched[:50]
-)
-
-# Filter dataframe berdasarkan pilihan suggestion
-if selected_value:
-    suggestion_df = df[
-        df.apply(
-            lambda row: row.astype(str)
-            .str.contains(selected_value, case=False)
-            .any(),
-            axis=1
-        )
-    ]
-
-    st.subheader("Hasil berdasarkan suggestion:")
-    st.dataframe(suggestion_df)

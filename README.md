@@ -1,1 +1,3 @@
 hai semuanya
+jumjum
+jimjim

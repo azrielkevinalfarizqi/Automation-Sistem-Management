@@ -1,44 +1,14 @@
 import streamlit as st
 import pandas as pd
 
-# =====================================================
-# KONFIGURASI HALAMAN
-# =====================================================
-st.set_page_config(page_title="SIPLah Automation System", layout="wide")
+st.set_page_config(page_title="Auto-in", layout="wide")
 
 
-# =====================================================
-# FUNGSI NAVIGASI HALAMAN
-# =====================================================
-def main():
-
-    # Sidebar Navigasi
-    st.sidebar.title("Navigasi Sistem")
-
-    page = st.sidebar.radio(
-        "Pilih Halaman:",
-        ["Login", "Dashboard", "Excel Processing"]
-    )
-
-    if page == "Login":
-        page_login()
-
-    elif page == "Dashboard":
-        page_dashboard()
-
-    elif page == "Excel Processing":
-        page_excel()
-
-
-
-# =====================================================
-# PAGE 1 – LOGIN (BAGIAN KEVIN)
-# =====================================================
+# =================Login Page=================
 def page_login():
-    
+
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
-
 
     st.markdown("""
         <style>
@@ -49,31 +19,13 @@ def page_login():
         </style>
     """, unsafe_allow_html=True)
 
-
     logo_col = st.columns([1, 1, 1])
 
     with logo_col[1]:
         st.image("assets/logo ladang.png", use_container_width=True)
 
-
-    if st.session_state.logged_in:
-
-        st.success("LOGIN BERHASIL!")
-
-        if st.button("Logout"):
-            st.session_state.logged_in = False
-            st.experimental_rerun()
-
-        st.markdown(
-            "<p style='text-align: center;'>Silakan pilih halaman melalui menu navigasi di sidebar.</p>",
-            unsafe_allow_html=True
-        )
-
-        return
-
     ADMIN_USERNAME = "admin"
     ADMIN_PASSWORD = "ladang123"
-
 
     col_left, col_form, col_right = st.columns([1, 1.2, 1])
 
@@ -85,63 +37,11 @@ def page_login():
         login_btn = st.button("Login", use_container_width=True)
 
         if login_btn:
-
             if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
                 st.session_state.logged_in = True
-                st.success("Login berhasil! Selamat datang di sistem.")
-                st.experimental_rerun()
-
+                st.rerun()
             else:
                 st.error("Username atau Password salah!")
-
-
-        st.markdown("""
-            <div style="
-                background-color: #FFF3CD;
-                padding: 10px;
-                border-radius: 8px;
-                border: 1px solid #FFEEBA;
-                text-align: center;
-                margin-top: 10px;
-                ">
-                ⚠️ <b>Hanya admin yang bisa mengakses sistem ini</b>
-            </div>
-        """, unsafe_allow_html=True)
-
-        if st.button("Logout"):
-            st.session_state.logged_in = False
-            st.experimental_rerun()
-
-        st.markdown(
-            "<p style='text-align: center;'>Silakan pilih halaman melalui menu navigasi di sidebar.</p>",
-            unsafe_allow_html=True
-        )
-
-        return
-
-    ADMIN_USERNAME = "admin"
-    ADMIN_PASSWORD = "ladang123"
-
-
-    col_left, col_form, col_right = st.columns([1, 1.2, 1])
-
-    with col_form:
-
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-
-        login_btn = st.button("Login", use_container_width=True)
-
-        if login_btn:
-
-            if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-                st.session_state.logged_in = True
-                st.success("Login berhasil! Selamat datang di sistem.")
-                st.experimental_rerun()
-
-            else:
-                st.error("Username atau Password salah!")
-
 
         st.markdown("""
             <div style="
@@ -158,213 +58,239 @@ def page_login():
 
 
 
-# ===================================SAMPE SINI=====================================================
-
-# =====================================================
-# PAGE 2 – DASHBOARD (BAGIAN DEVINA)
-# =====================================================
+# =================Dashboard=================
 def page_dashboard():
 
-    st.title("Dashboard Utama")
+    st.title("Auto-in: SIPLah Automating System")
 
-    st.markdown("""
-        <style>
-            .title {
-                text-align: center;
-            }
-            .header-style {
-                color: #1E88E5;
-                text-align: center;
-                padding: 20px;
-            }
-        </style>
-    """, unsafe_allow_html=True)
+    if st.button("Logout"):
+        st.session_state.logged_in = False
+        st.rerun()
 
-    # ===================================================
-    # BAGIAN DEVINA UNTUK MENGEMBANGKAN DASHBOARD
-    # ===================================================
+    st.divider()
 
-    st.subheader("Bagian Dashboard Devina")
+# =================Upload Dataset=================
+    st.subheader("Upload Dataset")
 
-    # ------------IMPORT DATA----------------------------
-    st.subheader("import data")
-    upload_file = st.file_uploader("Unggah file data dalam format CSV/XLSX", type=["csv","xlsx"])
-    
+    upload_file = st.file_uploader("Unggah file data dalam format CSV/XLSX", type=["csv", "xlsx"])
+
+    df = None
+
     if upload_file is not None:
         try:
             if upload_file.name.endswith(".csv"):
                 df = pd.read_csv(upload_file)
             else:
-                df = pd.read_excel(upload_file)    
-            
+                df = pd.read_excel(upload_file)
+
             st.success("File berhasil diunggah")
-            st.dataframe(df, use_container_width=True)
-        
+            # st.dataframe(df, use_container_width=True)
+
         except Exception as e:
-            st.info("Silahkan unggah file untuk memulai proses")
+            st.error("Terjadi kesalahan saat membaca file")
             df = None
-    
-    #-------------Tabel Output-------------------------------
-    st.subheader("Hasil Pengolahan data akan ditampikan disini:")
-    st.empty()
-    st.title("CSV VIEW_SHE")
+    else:
+        st.info("Silahkan upload file untuk menjalankan sistem")
 
-    file_name = "Data_Dummy.csv"
 
-    try:
-        df = pd.read_csv(file_name)
-        st.subheader("Data CSV:")
-        st.dataframe(df)
-    except FileNotFoundError:
-        st.error(f"File '{file_name}' tidak ditemukan!")
-
-    # --- FILTER / SEARCH ---
-    search_term = st.text_input("Cari data aman (ketik kata kunci):")
-
-    if search_term:
-        filtered_df = df[df.apply(lambda row: row.astype(str).str.contains(search_term, case=False).any(), axis=1)]
-        
-        st.subheader(f"Hasil pencarian: '{search_term}'")
-        if filtered_df.empty:
-            st.warning("Tidak ada data yang cocok dengan kata kunci.")
-        else:
-            st.dataframe(filtered_df)
-
-    #------------------INSIGHT SUMMARY-------------------------
+ # =================dashboard=================
     st.subheader("Data Insight")
+
     col1, col2, col3, col4, col5 = st.columns(5)
 
-    col1.metric(label="Dominasi Wilayah",
-                value="-",
-                delta= "Belum ada data")
-    
-    col2.metric(label="Kategori Banyak Dikunjungi",
-                value="-",
-                delta= "Belum ada data")
-    
-    col3.metric(label="Total Nominal Transaksi",
-                value="-",
-                delta= "Belum ada data")
-    
-    col4.metric(label="Total Produk Terjual",
-                value="-",
-                delta= "Belum ada data")
+    if df is not None:
 
-    col5.metric(label="Masuk Keranjang",
-                value="-",
-                delta= "Belum ada data")
-    
-#--------------------VISUALISASI TREN---------------------
+        df.columns = [c.lower() for c in df.columns]
+
+        # ---- Dominasi Wilayah ----
+        if "wilayah" in df.columns:
+            top_wilayah = df["wilayah"].value_counts().idxmax()
+            top_wilayah_count = df["wilayah"].value_counts().max()
+            col1.metric("Dominasi Wilayah", top_wilayah, f"{top_wilayah_count} transaksi")
+        else:
+            col1.metric("Dominasi Wilayah", "-", "Kolom tidak ada")
+
+        # ---- Kategori Terpopuler ----
+        if "kategori_produk" in df.columns:
+            top_kategori = df["kategori_produk"].value_counts().idxmax()
+            top_kategori_count = df["kategori_produk"].value_counts().max()
+            col2.metric("Kategori Banyak Dikunjungi", top_kategori, f"{top_kategori_count} data")
+        else:
+            col2.metric("Kategori Banyak Dikunjungi", "-", "Kolom tidak ada")
+
+        # ---- Total Nominal ----
+        if "nominal" in df.columns:
+            total_nominal = df["nominal"].sum()
+            col3.metric("Total Nominal Transaksi", f"Rp {total_nominal:,.0f}")
+        else:
+            col3.metric("Total Nominal Transaksi", "-", "Kolom tidak ada")
+
+        # ---- Total Produk Terjual ----
+        if "qty" in df.columns:
+            total_qty = df["qty"].sum()
+            col4.metric("Total Produk Terjual", total_qty)
+        else:
+            col4.metric("Total Produk Terjual", "-", "Kolom tidak ada")
+
+        # ---- Jumlah Baris Data ----
+        col5.metric("Total Data Masuk", len(df))
+
+
+    else:
+        col1.metric("Dominasi Wilayah", "-", "Belum ada data")
+        col2.metric("Kategori Banyak Dikunjungi", "-", "Belum ada data")
+        col3.metric("Total Nominal Transaksi", "-", "Belum ada data")
+        col4.metric("Total Produk Terjual", "-", "Belum ada data")
+        col5.metric("Total Data Masuk", "-", "Belum ada data")
+
+# =================Visualisasi Simpel=================
     st.subheader("Data Tren")
-    with st.container():
-        st.info("Visualisasi Tren akan ditampilkan disini")
-        st.empty()
+
+    if df is not None:
+
+        colA, colB = st.columns(2)
+
+        # -------- TREND BERDASARKAN TANGGAL --------
+        with colA:
+            st.write("Tren Jumlah Transaksi per Tanggal")
+
+            if "tanggal" in df.columns:
+                try:
+                    df["tanggal"] = pd.to_datetime(df["tanggal"])
+                    tren = df.groupby("tanggal").size().reset_index(name="jumlah_transaksi")
+
+                    st.line_chart(tren.set_index("tanggal"))
+
+                except:
+                    st.warning("Format kolom tanggal tidak sesuai")
+            else:
+                st.info("Tidak ada kolom 'tanggal' untuk visualisasi tren waktu")
 
 
-# PAGE 3 – EXCEL PROCESSING (BAGIAN SHEIRA)
-# =====================================================
-def page_excel():
-    st.title("Excel Processing Page")
+        # -------- BAR CHART KATEGORI --------
+        with colB:
+            st.write("Distribusi Kategori Produk")
 
-    file_name = "Data_Dummy.csv"
+            if "kategori_produk" in df.columns:
 
-    # ================= LOAD DATA =================
-    try:
-        df = pd.read_csv(file_name)
-    except:
-        st.error("Dataset tidak ditemukan")
-        st.stop()
+                kategori_chart = df["kategori_produk"].value_counts()
 
-    st.divider()
-    st.subheader("Filter Tampilan Data")
+                st.bar_chart(kategori_chart)
 
-    filtered_df = df.copy()
+            else:
+                st.info("Tidak ada kolom 'kategori_produk' untuk visualisasi")
 
-    # ================= PILIH KOLOM =================
-    selected_columns = st.multiselect(
-        "Pilih kolom yang ingin ditampilkan:",
-        options=filtered_df.columns.tolist(),
-        default=filtered_df.columns.tolist()
-    )
 
-    # ================= KATEGORI PRODUK =================
-    category_col = "kategori_produk"
-    if category_col in filtered_df.columns:
-        categories = sorted(filtered_df[category_col].dropna().astype(str).unique())
-        st.write("Pilih kategori produk:")
+    else:
+        st.info("Silahkan upload dataset untuk melihat visualisasi")
 
-        # Inisialisasi session_state untuk checkbox individual
-        for cat in categories:
-            key = f"cat_{cat}"
-            if key not in st.session_state:
-                st.session_state[key] = False
+# =================Filter Data=================
 
-        # Callback untuk Select ALL
-        def toggle_all_cat():
+    if df is not None:
+
+        st.divider()
+        st.subheader("Filter Tampilan Data")
+
+        filtered_df = df.copy()
+
+        # ================= PILIH KOLOM =================
+        selected_columns = st.multiselect(
+            "Pilih kolom yang ingin ditampilkan:",
+            options=filtered_df.columns.tolist(),
+            default=filtered_df.columns.tolist()
+        )
+
+        # ================= FILTER KATEGORI =================
+        category_col = "kategori_produk"
+
+        if category_col in filtered_df.columns:
+
+            categories = sorted(filtered_df[category_col].dropna().astype(str).unique())
+
+            st.write("Pilih kategori produk:")
+
             for cat in categories:
-                st.session_state[f"cat_{cat}"] = st.session_state["cat_all"]
+                key = f"cat_{cat}"
+                if key not in st.session_state:
+                    st.session_state[key] = False
 
-        # Checkbox ALL dengan callback
-        st.checkbox("ALL Kategori", key="cat_all", on_change=toggle_all_cat)
+            def toggle_all_cat():
+                for cat in categories:
+                    st.session_state[f"cat_{cat}"] = st.session_state["cat_all"]
 
-        # Render checkbox individual
-        cols = st.columns(3)
-        selected_categories = []
-        for i, cat in enumerate(categories):
-            key = f"cat_{cat}"
-            checked = cols[i % 3].checkbox(cat, value=st.session_state[key], key=key)
-            if checked:
-                selected_categories.append(cat)
+            st.checkbox("ALL Kategori", key="cat_all", on_change=toggle_all_cat)
 
-        if selected_categories:
-            filtered_df = filtered_df[filtered_df[category_col].astype(str).isin(selected_categories)]
-    else:
-        st.warning(f"Kolom '{category_col}' tidak ditemukan")
+            cols = st.columns(3)
+            selected_categories = []
 
-    # ================= WILAYAH =================
-    wilayah_col = "wilayah"
-    if wilayah_col in filtered_df.columns:
-        wilayah_values = sorted(filtered_df[wilayah_col].dropna().astype(str).unique())
-        st.write("Pilih wilayah:")
+            for i, cat in enumerate(categories):
+                key = f"cat_{cat}"
+                checked = cols[i % 3].checkbox(cat, value=st.session_state[key], key=key)
+                if checked:
+                    selected_categories.append(cat)
 
-        # Inisialisasi session_state
-        for w in wilayah_values:
-            key = f"wil_{w}"
-            if key not in st.session_state:
-                st.session_state[key] = False
+            if selected_categories:
+                filtered_df = filtered_df[filtered_df[category_col].astype(str).isin(selected_categories)]
 
-        # Callback Select ALL wilayah
-        def toggle_all_wil():
+        else:
+            st.warning("Kolom kategori_produk tidak ditemukan")
+
+
+        # ================= FILTER WILAYAH =================
+        wilayah_col = "wilayah"
+
+        if wilayah_col in filtered_df.columns:
+
+            wilayah_values = sorted(filtered_df[wilayah_col].dropna().astype(str).unique())
+
+            st.write("Pilih wilayah:")
+
             for w in wilayah_values:
-                st.session_state[f"wil_{w}"] = st.session_state["wil_all"]
+                key = f"wil_{w}"
+                if key not in st.session_state:
+                    st.session_state[key] = False
 
-        st.checkbox("ALL Wilayah", key="wil_all", on_change=toggle_all_wil)
+            def toggle_all_wil():
+                for w in wilayah_values:
+                    st.session_state[f"wil_{w}"] = st.session_state["wil_all"]
 
-        # Render checkbox individual
-        cols_w = st.columns(3)
-        selected_wilayah = []
-        for i, w in enumerate(wilayah_values):
-            key = f"wil_{w}"
-            checked = cols_w[i % 3].checkbox(w, value=st.session_state[key], key=key)
-            if checked:
-                selected_wilayah.append(w)
+            st.checkbox("ALL Wilayah", key="wil_all", on_change=toggle_all_wil)
 
-        if selected_wilayah:
-            filtered_df = filtered_df[filtered_df[wilayah_col].astype(str).isin(selected_wilayah)]
+            cols_w = st.columns(3)
+            selected_wilayah = []
+
+            for i, w in enumerate(wilayah_values):
+                key = f"wil_{w}"
+                checked = cols_w[i % 3].checkbox(w, value=st.session_state[key], key=key)
+                if checked:
+                    selected_wilayah.append(w)
+
+            if selected_wilayah:
+                filtered_df = filtered_df[filtered_df[wilayah_col].astype(str).isin(selected_wilayah)]
+
+        else:
+            st.warning("Kolom wilayah tidak ditemukan")
+
+
+        # ================= PAKAI FILTER =================
+        if selected_columns:
+            filtered_df = filtered_df[selected_columns]
+
+        # ================= OUTPUT =================
+        st.subheader("Hasil Filter:")
+        st.dataframe(filtered_df)
+
+
+def main():
+
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+
+    if not st.session_state.logged_in:
+        page_login()
     else:
-        st.warning(f"Kolom '{wilayah_col}' tidak ditemukan")
+        page_dashboard()
 
-    # ================= APPLY COLUMN FILTER =================
-    if selected_columns:
-        filtered_df = filtered_df[selected_columns]
 
-    # ================= OUTPUT =================
-    st.subheader("Hasil Filter:")
-    st.dataframe(filtered_df)
-
-# =====================================================
-# =====================================================
-# JALANKAN APLIKASI
-# =====================================================
 if __name__ == "__main__":
     main()

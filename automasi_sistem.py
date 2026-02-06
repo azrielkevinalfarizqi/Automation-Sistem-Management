@@ -89,12 +89,34 @@ def page_dashboard():
         </style>
     """, unsafe_allow_html=True)
 
-    st.divider()
+    # ===================================================
+    # BAGIAN DEVINA UNTUK MENGEMBANGKAN DASHBOARD
+    # ===================================================
 
-    st.write("Day-1 nyoba magang")
+    st.subheader("Bagian Dashboard Devina")
 
+    # ------------IMPORT DATA----------------------------
+    st.subheader("import data")
+    upload_file = st.file_uploader("Unggah file data dalam format CSV/XLSX", type=["csv","xlsx"])
+    
+    if upload_file is not None:
+        try:
+            if upload_file.name.endswith(".csv"):
+                df = pd.read_csv(upload_file)
+            else:
+                df = pd.read_excel(upload_file)    
+            
+            st.success("File berhasil diunggah")
+            st.dataframe(df, use_container_width=True)
+        
+        except Exception as e:
+            st.info("Silahkan unggah file untuk memulai proses")
+            df = None
+    
+    #-------------Tabel Output-------------------------------
+    st.subheader("Hasil Pengolahan data akan ditampikan disini:")
+    st.empty()
     st.title("CSV VIEW_SHE")
-
     file_name = "data_klasifikasi.csv"
 
     try:
@@ -105,7 +127,7 @@ def page_dashboard():
         st.error(f"File '{file_name}' tidak ditemukan!")
 
     # --- FILTER / SEARCH ---
-    search_term = st.text_input("Cari data amana (ketik kata kunci):")
+    search_term = st.text_input("Cari data aman (ketik kata kunci):")
 
     if search_term:
         filtered_df = df[df.apply(lambda row: row.astype(str).str.contains(search_term, case=False).any(), axis=1)]
@@ -116,23 +138,35 @@ def page_dashboard():
         else:
             st.dataframe(filtered_df)
 
+    #------------------INSIGHT SUMMARY-------------------------
+    st.subheader("Data Insight")
+    col1, col2, col3, col4, col5 = st.columns(5)
 
-    # ===================================================
-    # BAGIAN DEVINA UNTUK MENGEMBANGKAN DASHBOARD
-    # ===================================================
+    col1.metric(label="Dominasi Wilayah",
+                value="-",
+                delta= "Belum ada data")
+    
+    col2.metric(label="Kategori Banyak Dikunjungi",
+                value="-",
+                delta= "Belum ada data")
+    
+    col3.metric(label="Total Nominal Transaksi",
+                value="-",
+                delta= "Belum ada data")
+    
+    col4.metric(label="Total Produk Terjual",
+                value="-",
+                delta= "Belum ada data")
 
-    st.divider()
-    st.subheader("Bagian Dashboard Devina")
-
-    # ---------------------------------------------------
-    # SILAKAN TAMBAHKAN:
-    # - Grafik visualisasi
-    # - Insight wilayah
-    # - Analisis produk
-    # - Trend data
-    # ---------------------------------------------------
-
-
+    col5.metric(label="Masuk Keranjang",
+                value="-",
+                delta= "Belum ada data")
+    
+#--------------------VISUALISASI TREN---------------------
+    st.subheader("Data Tren")
+    with st.container():
+        st.info("Visualisasi Tren akan ditampilkan disini")
+        st.empty()
 
 
 # =====================================================

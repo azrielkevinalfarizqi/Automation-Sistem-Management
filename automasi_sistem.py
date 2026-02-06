@@ -72,7 +72,7 @@ def page_dashboard():
 # =================Upload Dataset=================
     st.subheader("Upload Dataset")
 
-    upload_file = st.file_uploader("Unggah file data dalam format CSV/XLSX", type=["csv", "xlsx"])
+    upload_file = st.file_uploader("Unggah file dalam format CSV/XLSX", type=["csv", "xlsx"])
 
     df = None
 

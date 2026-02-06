@@ -39,7 +39,6 @@ def page_login():
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
 
-<<<<<<< HEAD
 
     st.markdown("""
         <style>
@@ -108,31 +107,6 @@ def page_login():
                 ⚠️ <b>Hanya admin yang bisa mengakses sistem ini</b>
             </div>
         """, unsafe_allow_html=True)
-=======
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
-
-
-    st.markdown("""
-        <style>
-        div.stButton > button:first-child {
-            background-color: #1E88E5;
-            color: white;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-
-    logo_col = st.columns([1, 1, 1])
-
-    with logo_col[1]:
-        st.image("assets/logo ladang.png", use_container_width=True)
-
-
-    if st.session_state.logged_in:
-
-        st.success("LOGIN BERHASIL!")
->>>>>>> 7d55fbbb5d59dea85afa388a43a250bea9a7f17a
 
         if st.button("Logout"):
             st.session_state.logged_in = False
@@ -234,12 +208,8 @@ def page_dashboard():
     st.subheader("Hasil Pengolahan data akan ditampikan disini:")
     st.empty()
     st.title("CSV VIEW_SHE")
-<<<<<<< HEAD
 
     file_name = "Data_Dummy.csv"
-=======
-    file_name = "data_klasifikasi.csv"
->>>>>>> 7d55fbbb5d59dea85afa388a43a250bea9a7f17a
 
     try:
         df = pd.read_csv(file_name)

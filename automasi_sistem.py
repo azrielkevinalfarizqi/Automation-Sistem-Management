@@ -60,20 +60,33 @@ def page_login():
 
 # =================Dashboard=================
 def page_dashboard():
+    st.write("")   # spacer
+    st.write("")
+    st.write("")   # spacer
+    st.write("") 
 
-    st.title("Auto-in: SIPLah Automating System")
+# =================Upload Dataset=================#sheira hikangin nama dan nambahin css
+    st.markdown("""
+<style>
 
-    if st.button("Logout"):
-        st.session_state.logged_in = False
-        st.rerun()
+[data-testid="stFileUploader"] {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0px 4px 14px rgba(0,0,0,0.12);
+}
 
-    st.divider()
+[data-testid="stFileUploader"] section {
+    border: 2px dashed #42A5F5;
+    background: #FAFAFA;
+}
 
-# =================Upload Dataset=================
-    st.subheader("Upload Dataset")
-
-    upload_file = st.file_uploader("Unggah file dalam format CSV/XLSX", type=["csv", "xlsx"])
-
+</style>
+""", unsafe_allow_html=True)
+    upload_file = st.file_uploader(
+    "",
+    type=["csv", "xlsx"]
+)
     df = None
 
     if upload_file is not None:
@@ -89,13 +102,24 @@ def page_dashboard():
         except Exception as e:
             st.error("Terjadi kesalahan saat membaca file")
             df = None
-    else:
-        st.info("Silahkan upload file untuk menjalankan sistem")
 
+#she nambahin ini untuk tulisan agar di dalam kotak
 
- # =================dashboard=================
-    st.subheader("Data Insight")
-
+ # =================dashboard=================#she nambahin ini
+    st.markdown(
+    """
+    <h3 style='
+        font-family: Poppins SemiBold;
+        color: #165E76;
+        font-size: 24px;
+        font-weight: 600;
+        margin-top: 30px;
+    '>
+    Business Insight
+    </h3>
+    """,
+    unsafe_allow_html=True
+)
     col1, col2, col3, col4, col5 = st.columns(5)
 
     if df is not None:
@@ -279,10 +303,46 @@ def page_dashboard():
         # ================= OUTPUT =================
         st.subheader("Hasil Filter:")
         st.dataframe(filtered_df)
+def set_bg(image_path):
+    import base64
+
+    with open(image_path, "rb") as img:
+        encoded = base64.b64encode(img.read()).decode()
+
+    css = f"""
+    <style>
+
+    /* Background utama */
+    .stApp {{
+        background-image: url("data:image/png;base64,{encoded}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+
+    /* HEADER STREAMLIT */
+    header {{
+        background-color: rgba(0,0,0,0) !important;
+    }}
+
+    .stApp > header {{
+        background-color: transparent !important;
+    }}
+
+    .block-container {{
+        padding-top: 2rem;
+    }}
+
+
+    </style>
+    """
+
+    st.markdown(css, unsafe_allow_html=True)
 
 
 def main():
-
+    set_bg("assets/background.png") # she nambahin ini
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
 

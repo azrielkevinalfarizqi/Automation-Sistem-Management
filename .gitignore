@@ -1,0 +1,30 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Notebook
+.ipynb_checkpoints/
+
+# Dataset
+*.csv
+*.xlsx
+# Allow mappings csv
+!mappings/
+!mappings/*.csv
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+node_modules/
+dist/
+
+# Model files
+model_artifacts_3/*.pt*
+*.pt
